@@ -1,10 +1,11 @@
 import 'package:floating_search_bar/floating_search_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:naudi_mock/feed-detail.dart';
-
-import 'colors.dart';
-import 'main.dart';
-import 'model/nerd.dart';
+import 'package:flutter/widgets.dart';
+import 'package:naudi_mock/model/colors.dart';
+import 'package:naudi_mock/model/nerd.dart';
+import 'package:naudi_mock/ui/feed-detail.dart';
+import 'package:naudi_mock/ui/home.dart';
 
 class Feed extends StatefulWidget {
   const Feed({Key key}) : super(key: key);
@@ -17,7 +18,7 @@ class _FeedState extends State<Feed> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.only(top: 4.0),
       child: FloatingSearchBar.builder(
         itemCount: nerds.length,
         itemBuilder: (BuildContext context, int index) {
@@ -38,10 +39,15 @@ class _FeedState extends State<Feed> {
             );
           },
         ),
-        leading: IconButton(
+        drawer: Drawer(
+          child: Home(),
+          elevation: 0.0,
+        ),
+//        endDrawer: PostWidget(),
+        /* leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {},
-        ),
+        ),*/
         onChanged: (String value) {
           print(value);
         },
@@ -78,6 +84,8 @@ class _FeedState extends State<Feed> {
     return InkWell(
       onTap: () {
         print('wooow');
+//        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark
+//            .copyWith(statusBarIconBrightness: Brightness.dark));
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -144,12 +152,38 @@ class _FeedState extends State<Feed> {
       ),
     );
   }
+
+  void _settingModalBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Material(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(88.0),
+            ),
+            child: new Wrap(
+              children: <Widget>[
+                new ListTile(
+                    leading: new Icon(Icons.music_note),
+                    title: new Text('Music'),
+                    onTap: () => {}),
+                new ListTile(
+                  leading: new Icon(Icons.videocam),
+                  title: new Text('Video'),
+                  onTap: () => {},
+                ),
+              ],
+            ),
+          );
+        });
+  }
 }
 
 class MySearchDelegate extends SearchDelegate<String> {
   final res = nerds.map((n) => n.title).toList();
 
   final recents = nerds.map((n) => n.title).toList().sublist(0, 9);
+
   @override
   List<Widget> buildActions(BuildContext context) {
     // TODO: implement buildActions
