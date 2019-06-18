@@ -89,7 +89,14 @@ class _FeedDetailState extends State<FeedDetail> {
                             return Column(
                               children: <Widget>[
                                 ListTile(
-                                  subtitle: Text(content),
+                                  subtitle: Hero(
+                                    tag: '$title ${this.index.toString()}',
+                                    child: Text(
+                                      content,
+                                      textAlign: TextAlign.start,
+                                      style: Theme.of(context).textTheme.body1,
+                                    ),
+                                  ),
                                 ),
                                 Divider(),
                                 // Text('Comments'),
@@ -138,94 +145,6 @@ class _FeedDetailState extends State<FeedDetail> {
             ),
           ],
         ),
-        // body: Material(
-        //   color: primaryColor,
-        //   child: Padding(
-        //     padding: const EdgeInsets.all(8.0),
-        //     child: Column(
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       children: <Widget>[
-        //         Hero(
-        //           tag: index.toString(),
-        //           child: Padding(
-        //             padding: const EdgeInsets.all(8.0),
-        //             child: Text(
-        //               title,
-        //               textAlign: TextAlign.start,
-        //               style: Theme.of(context).textTheme.display1.copyWith(
-        //                     color: darkTextColor,
-        //                   ),
-        //             ),
-        //           ),
-        //         ),
-        //         Hero(
-        //           tag: 'content ${index.toString()}',
-        //           child: Text(
-        //             content,
-        //             textAlign: TextAlign.start,
-        //             style: Theme.of(context).textTheme.body1,
-        //           ),
-        //         ),
-        //         Divider(),
-        //         Row(
-        //           mainAxisAlignment: MainAxisAlignment.end,
-        //           children: <Widget>[
-        //             IconButton(
-        //               tooltip: 'up vote',
-        //               icon: Icon(Icons.thumb_up),
-        //               onPressed: () {},
-        //             ),
-        //             IconButton(
-        //               tooltip: 'down vote',
-        //               icon: Icon(Icons.thumb_down),
-        //               onPressed: () {},
-        //             ),
-        //             IconButton(
-        //               tooltip: 'follow',
-        //               icon: Icon(Icons.directions_run),
-        //               onPressed: () {},
-        //             ),
-        //           ],
-        //         ),
-        //         Divider(),
-        //         Flexible(
-        //           child: ListView(
-        //             children: nerds
-        //                 .map(
-        //                   (nerd) => ListTile(
-        //                         title: Text(nerd.title),
-        //                       ),
-        //                 )
-        //                 .toList(),
-        //           ),
-        //         ),
-        //         Card(
-        //           child: Padding(
-        //             padding: const EdgeInsets.all(8.0),
-        //             child: Row(
-        //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //               children: <Widget>[
-        //                 IconButton(
-        //                   icon: Icon(Icons.tag_faces),
-        //                   onPressed: () {},
-        //                 ),
-        //                 Flexible(
-        //                   child: TextField(
-        //                     decoration: InputDecoration(labelText: 'comment'),
-        //                   ),
-        //                 ),
-        //                 IconButton(
-        //                   icon: Icon(Icons.send),
-        //                   onPressed: () {},
-        //                 ),
-        //               ],
-        //             ),
-        //           ),
-        //         )
-        //       ],
-        //     ),
-        //   ),
-        // ),
       ),
     );
   }

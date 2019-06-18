@@ -145,15 +145,21 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                     leading: CircleAvatar(
                       child: Text('U'),
                     ),
-                    title: Text(
-                      nerd.title,
-                      style: Theme.of(context).textTheme.title,
+                    title: Hero(
+                      child: Text(
+                        nerd.title,
+                        style: Theme.of(context).textTheme.title,
+                      ),
+                      tag: index.toString(),
                     ),
-                    subtitle: Text(
-                      nerd.content,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.body1,
+                    subtitle: Hero(
+                      child: Text(
+                        nerd.content,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.body1,
+                      ),
+                      tag: '${nerd.title} ${index.toString()}',
                     ),
                     onTap: () {
                       Navigator.push(
