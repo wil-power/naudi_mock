@@ -1,11 +1,11 @@
-import 'package:floating_search_bar/floating_search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:naudi_mock/model/colors.dart';
 import 'package:naudi_mock/model/nerd.dart';
 import 'package:naudi_mock/ui/feed-detail.dart';
-import 'package:naudi_mock/ui/home.dart';
+
+import 'floating-bar-helpers.dart';
 
 class Feed extends StatefulWidget {
   const Feed({Key key}) : super(key: key);
@@ -14,69 +14,168 @@ class Feed extends StatefulWidget {
   _FeedState createState() => _FeedState();
 }
 
-class _FeedState extends State<Feed> {
+class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
+  double _height = 80.0;
+  AnimationController _proxyAnimation;
+
+  double _elevation = 1.0;
+
+  var _iconData = AnimatedIcons.menu_arrow;
+
+  double _padding = 12.0;
+  bool _expanded = false;
+
+  TextEditingController _textController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _textController = TextEditingController();
+    _proxyAnimation = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _textController.dispose();
+    _proxyAnimation?.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 4.0),
-      child: FloatingSearchBar.builder(
-        itemCount: nerds.length,
-        itemBuilder: (BuildContext context, int index) {
-          if (index >= nerds.length) {
-            return null;
-          } else
-            return _buildItem(nerds[index], index);
-        },
-        trailing: CircleAvatar(
-          child: Text("ND"),
-        ),
-        title: InkWell(
-          child: Text('Find nerds..'),
-          onTap: () {
-            showSearch(
-              context: context,
-              delegate: MySearchDelegate(),
-            );
-          },
-        ),
-        drawer: Drawer(
-          child: Home(),
-          elevation: 0.0,
-        ),
-//        endDrawer: PostWidget(),
-        /* leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {},
-        ),*/
-        onChanged: (String value) {
-          print(value);
-        },
-        onTap: () {
-          print('asdsdsd');
-          showSearch(context: context, delegate: MySearchDelegate());
-        },
-        decoration: InputDecoration.collapsed(
-          hintText: "Search...",
+    return Scaffold(
+//      drawer: Home(),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverPersistentHeader(
+              floating: true,
+              pinned: false,
+              delegate: SliverAppBarDelegate(
+                sidePadding: _padding,
+                expanded: _expanded,
+                leading: IconButton(
+                  icon: AnimatedIcon(
+                    icon: _iconData,
+                    progress: _proxyAnimation,
+                  ),
+                  onPressed: () {
+                    if (_expanded) {
+                      _proxyAnimation.reverse();
+                      setState(() {
+                        _height = 80.0;
+                        _padding = 12.0;
+                        _elevation = 1.0;
+                        _expanded = false;
+                      });
+                    }
+                  },
+                ),
+                automaticallyImplyLeading: false,
+                title: _expanded
+                    ? TextField(
+                        controller: _textController,
+                        autofocus: true,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          filled: false,
+                          hintText: 'Find nerds',
+                          hintStyle: Theme.of(context).textTheme.body1,
+                        ),
+                      )
+                    : Container(
+                        height: double.infinity,
+                        child: Center(
+                          child: InkWell(
+                            child: Center(child: Text('Find nerds ...')),
+                            onTap: () {
+                              setState(() {
+                                _elevation = 0.0;
+                                _height = MediaQuery.of(context).size.height;
+                                _proxyAnimation.forward();
+                                _padding = 0.0;
+                                _expanded = true;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                trailing: !_expanded
+                    ? CircleAvatar(
+                        child: Text('W'),
+                      )
+                    : IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: () {
+                          _textController.clear();
+                        },
+                      ),
+                elevation: _elevation,
+                backgroundColor: primaryColor,
+                floating: true,
+                pinned: false,
+                snapConfiguration: null,
+                collapsedHeight: _height,
+                topPadding: 0.0,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Recent threads',
+                  style: Theme.of(context).textTheme.subtitle.copyWith(
+                        color: accentColor,
+                      ),
+                ),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                if (nerds.length > index) {
+                  Nerd nerd = nerds[index];
+                  return ListTile(
+                    contentPadding: EdgeInsets.all(10.0),
+                    leading: CircleAvatar(
+                      child: Text('U'),
+                    ),
+                    title: Text(
+                      nerd.title,
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                    subtitle: Text(
+                      nerd.content,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.body1,
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          maintainState: true,
+                          builder: (context) => FeedDetail(
+                                title: nerd.title,
+                                content: nerd.content,
+                                index: index,
+                              ),
+                        ),
+                      );
+                    },
+                  );
+                } else
+                  return null;
+              }),
+            ),
+          ],
         ),
       ),
-      // SliverToBoxAdapter(
-      //   child: Padding(
-      //     padding: const EdgeInsets.all(8.0),
-      //     child: Text(
-      //       "Recents",
-      //       style: Theme.of(context).textTheme.body1.copyWith(
-      //             color: accentColor,
-      //           ),
-      //     ),
-      //   ),
-      // ),
-      //   SliverList(
-      //     delegate: SliverChildBuilderDelegate(
-      //       (context, index) {
-      //         return _buildItem(nerds[index]);
-      //       },
-      //     ),
-      //   )
     );
   }
 

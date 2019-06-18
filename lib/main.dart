@@ -60,6 +60,7 @@ class MyApp extends StatelessWidget {
       ),
       hintColor: accentColor,
       // TODO decorate the inputs (103)
+/*
       inputDecorationTheme: InputDecorationTheme(
         filled: false,
         hasFloatingPlaceholder: false,
@@ -86,6 +87,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+*/
     );
   }
 
@@ -95,6 +97,10 @@ class MyApp extends StatelessWidget {
           headline: base.headline.copyWith(fontWeight: FontWeight.w500),
           title: base.title.copyWith(
             fontSize: 18.0,
+          ),
+          body1: base.title.copyWith(
+            fontSize: 15.0,
+            fontWeight: FontWeight.w400,
           ),
           caption: base.caption.copyWith(
             fontWeight: FontWeight.w400,

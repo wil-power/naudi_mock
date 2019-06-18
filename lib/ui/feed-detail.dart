@@ -63,13 +63,13 @@ class _FeedDetailState extends State<FeedDetail> {
                   SliverAppBar(
                     actions: <Widget>[
                       IconButton(
-                        icon: Icon(Icons.thumb_up),
+                        icon: Icon(Icons.sentiment_satisfied),
                         onPressed: () {},
                       ),
                       IconButton(
                         icon: Icon(Icons.directions_run),
                         onPressed: () {},
-                      )
+                      ),
                     ],
                     title: Hero(
                       child: Text(
@@ -123,7 +123,7 @@ class _FeedDetailState extends State<FeedDetail> {
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: 'Comment',
-//                        border: UnderlineInputBorder(),
+                          border: InputBorder.none,
                         ),
                       ),
                     ),
